@@ -1,0 +1,49 @@
+{
+    "parser": "vue-eslint-parser",
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "parserOptions" : {
+        "parser": "babel-eslint",
+        "ecmaVersion": 2017,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "vue"
+    ],
+    "extends": [
+        "plugin:vue/recommended",
+        "plugin:vue/essential"
+    ],
+    "rules": {
+        "no-console": "off",
+        "indent": [
+            "error",
+            4
+        ],
+        "no-unused-vars": [
+            "warn",
+            {
+                "vars": "all"
+            }
+        ],
+        "multiline-ternary": [
+            "error",
+            "always"
+        ],
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
+        "quotes": [
+            "warn",
+            "double"
+        ],
+        "semi": [
+            "warn",
+            "always"
+        ]
+    }
+}

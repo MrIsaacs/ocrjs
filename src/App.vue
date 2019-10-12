@@ -6,11 +6,11 @@
 
 <script>
 import TestPictureInput from "./components/PictureInput.vue";
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator";
 
 @Component({
     components: {
-        TestPictureInput,
+        TestPictureInput
     }
 })
 export default class VueApp extends Vue {

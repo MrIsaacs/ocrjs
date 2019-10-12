@@ -1,4 +1,4 @@
-# ocrizer
+# OCRjs
 
 ## Project setup
 ```
