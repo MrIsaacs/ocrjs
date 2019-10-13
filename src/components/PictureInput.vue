@@ -58,7 +58,7 @@ import { Component, Vue } from "vue-property-decorator";
         PictureInput
     }
 })
-export default class TestPictureInput extends Vue {
+class TestPictureInput extends Vue {
     heading = "OCRjs";
     text = "";
     progress = 0;
@@ -95,7 +95,7 @@ export default class TestPictureInput extends Vue {
     }
 }
 
-
+export default TestPictureInput;
 </script>
 
 <style scoped>

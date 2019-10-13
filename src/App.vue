@@ -13,8 +13,9 @@ import { Component, Vue } from "vue-property-decorator";
         TestPictureInput
     }
 })
-export default class VueApp extends Vue {
-};
+class VueApp extends Vue {};
+
+export default VueApp;
 </script>
 
 <style>
