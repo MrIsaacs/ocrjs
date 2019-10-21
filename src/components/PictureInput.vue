@@ -5,6 +5,14 @@
         <h1 class="h2 text-center">
           {{ heading }}
         </h1>
+        <vue-cropper
+          v-if="image"
+          ref="cropper"
+          :src="image"
+          alt="Source Image"
+          :cropmove="croppedImage"
+        />
+        <!-- ImageCropper / -->
         <picture-input
           width="200"
           height="200"
@@ -49,48 +57,53 @@
 </template>
 
 <script>
-import { createWorker } from "tesseract.js";
-import PictureInput from "vue-picture-input";
-import { Component, Vue } from "vue-property-decorator";
+import { createWorker } from 'tesseract.js';
+import PictureInput from 'vue-picture-input';
+import { Component, Vue } from 'vue-property-decorator';
+// import ImageCropper from '@/components/ImageCropper.vue';
+import VueCropper from 'vue-cropperjs';
+import 'cropperjs/dist/cropper.css';
 
 @Component({
     components: {
-        PictureInput
+        PictureInput,
+        VueCropper
     }
 })
 class TestPictureInput extends Vue {
-    heading = "OCRjs";
-    text = "";
+    heading = 'OCRjs';
+    text = '';
     progress = 0;
     image = null;
+    croppedImage = null;
 
     async draggedImaged(image) {
         if (image) {
-            console.log("Picture loaded...");
-
-            const worker = createWorker({
-                logger: m => {
-                    if (m.jobId) {
-                        this.progress = m.progress == 0 ?
-                            0 :
-                            m.progress * 100;
-                    }
-                    console.log(m);
-                }
-            });
-
-            await worker.load();
-            await worker.loadLanguage("deu");
-            await worker.initialize("deu");
-            const {
-                data: { text }
-            } = await worker.recognize(image);
-            this.text = text.replace(/\n/g, "<br />");
-            await worker.terminate();
+            console.log('Picture loaded...');
 
             this.image = image;
+
+            // const worker = createWorker({
+            //     logger: m => {
+            //         if (m.jobId) {
+            //             this.progress = m.progress == 0 ?
+            //                 0 :
+            //                 m.progress * 100;
+            //         }
+            //         console.log(m);
+            //     }
+            // });
+            //
+            // await worker.load();
+            // await worker.loadLanguage("deu");
+            // await worker.initialize("deu");
+            // const {
+            //     data: { text }
+            // } = await worker.recognize(image);
+            // this.text = text.replace(/\n/g, "<br />");
+            // await worker.terminate();
         } else {
-            console.log("FileReader API not supported: use <form>, Luke!");
+            console.log('FileReader API not supported: use <form>, Luke!');
         }
     }
 }
