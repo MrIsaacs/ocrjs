@@ -1,36 +1,46 @@
 <template>
   <div class="container-fluid">
     <div class="row">
+      <b-progress
+        v-if="imageSrc"
+        class="rounded-0"
+        :max="100"
+      >
+        <b-progress-bar
+          :value="progress"
+          :label="`${progress.toFixed(0)}%`"
+          :max="100"
+          show-progress
+        />
+      </b-progress>
       <div class="col-lg-12">
         <h1 class="h2 text-center">
           {{ heading }}
         </h1>
-        <vue-cropper
-          v-if="image"
-          ref="cropper"
-          :src="image"
-          alt="Source Image"
-          :cropmove="croppedImage"
-        />
+      </div>
+      <div class="col-lg-12">
+        <div class="content">
+          <section v-if="imageSrc" class="cropper-area">
+            <vue-cropper
+              ref="cropper"
+              :src="imageSrc"
+              alt="Source Image"
+              :cropend="cropImage"
+            />
+          </section>
+          <section class="preview-area">
+            <p>Preview</p>
+            <div class="cropped-image">
+              <img
+                v-if="croppedImage"
+                :src="croppedImage"
+                alt="Cropped Image"
+              />
+              <div v-else class="crop-placeholder" />
+            </div>
+          </section>
+        </div>
         <!-- ImageCropper / -->
-        <picture-input
-          width="200"
-          height="200"
-          accept="image/jpeg,image/png"
-          button-class="btn btn-success"
-          @change="draggedImaged"
-        />
-        <b-progress
-          class="rounded-0"
-          :max="100"
-        >
-          <b-progress-bar
-            :value="progress"
-            :label="`${progress.toFixed(0)}%`"
-            :max="100"
-            show-progress
-          />
-        </b-progress>
       </div>
       <div
         v-if="progress === 100"
@@ -40,15 +50,16 @@
           Output goes here:
         </h3>
         <div>
-          <h4>Left and Right (or Start and End)</h4>
           <b-card
-            :img-src="image"
+            :img-src="imageSrc"
             img-alt="Card image"
             img-left
             class="mb-3"
           >
-            <!-- eslint-disable-next-line -->
-            <b-card-text v-html="text" />
+            <b-card-text>
+              <!-- eslint-disable-next-line -->
+              <p v-for="paragraph in doc" v-html="paragraph" />
+            </b-card-text>
           </b-card>
         </div>
       </div>
@@ -115,37 +126,72 @@ import 'cropperjs/dist/cropper.css';
 class TestPictureInput extends Vue {
     heading = 'OCRjs';
     text = '';
+    doc = [];
     progress = 0;
-    image = null;
+    imageSrc = null;
     croppedImage = null;
 
-    async draggedImaged(image) {
-        if (image) {
-            console.log('Picture loaded...');
+    metho;
 
-            this.image = image;
+    cropImage(e) {
+        if (this.$refs.cropper) {
+            this.croppedImage = this.$refs.cropper.getCroppedCanvas().toDataURL();
+        }
+    }
 
-            // const worker = createWorker({
-            //     logger: m => {
-            //         if (m.jobId) {
-            //             this.progress = m.progress == 0 ?
-            //                 0 :
-            //                 m.progress * 100;
-            //         }
-            //         console.log(m);
-            //     }
-            // });
-            //
-            // await worker.load();
-            // await worker.loadLanguage("deu");
-            // await worker.initialize("deu");
-            // const {
-            //     data: { text }
-            // } = await worker.recognize(image);
-            // this.text = text.replace(/\n/g, "<br />");
-            // await worker.terminate();
+    createImage() {
+        console.log('Croppen wurde beendet.');
+    }
+
+    chooseImage() {
+        this.$refs.input.click();
+    }
+
+    appendText() {
+        this.doc.push(this.text);
+    }
+
+    async scanCroppedImage() {
+        if(this.$refs.cropper) {
+            const worker = createWorker({
+                logger: m => {
+                    if (m.jobId) {
+                        this.progress = m.progress == 0 ?
+                            0 :
+                            m.progress * 100;
+                    }
+                }
+            });
+
+            await worker.load();
+            await worker.loadLanguage("deu");
+            await worker.initialize("deu");
+            const {
+                data: { text }
+            } = await worker.recognize(this.croppedImage);
+            this.doc.push(text.replace(/\n/g, "<br />"));
+            await worker.terminate();
         } else {
             console.log('FileReader API not supported: use <form>, Luke!');
+        }
+    }
+
+    setImage(e) {
+        const file = e.target.files[0];
+        let that = this;
+        if (file.type.indexOf('image/') === -1) {
+            alert('Please select an image file');
+            return;
+        }
+        if (typeof FileReader === 'function') {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                this.imageSrc = event.target.result;
+                this.croppedImage = this.cropImage();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Sorry, FileReader API not supported');
         }
     }
 }
@@ -207,6 +253,30 @@ img {
   left: 0;
   top: 0;
   display: none;
+}
+
+.label-container {
+  position: fixed;
+  bottom: 48px;
+  right: 105px;
+  display: table;
+  visibility: hidden;
+}
+
+.label-text {
+  color: #FFF;
+  background: rgba(51, 51, 51, 0.5);
+  display: table-cell;
+  vertical-align: middle;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.label-arrow {
+  display: table-cell;
+  vertical-align: middle;
+  color: #333;
+  opacity: 0.5;
 }
 
 .float {
