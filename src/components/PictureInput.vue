@@ -1,6 +1,13 @@
 <template>
   <div class="container-fluid">
     <div class="row">
+      <b-alert
+        v-model="showDismissibleAlert"
+        variant="warning"
+        dismissible
+      >
+        First choose an image and then select the area which will be scanned!
+      </b-alert>
       <b-progress
         v-if="imageSrc"
         class="rounded-0"
@@ -130,6 +137,7 @@ class TestPictureInput extends Vue {
     progress = 0;
     imageSrc = null;
     croppedImage = null;
+    showDismissibleAlert = false;
 
     metho;
 
@@ -172,7 +180,7 @@ class TestPictureInput extends Vue {
             this.doc.push(text.replace(/\n/g, "<br />"));
             await worker.terminate();
         } else {
-            console.log('FileReader API not supported: use <form>, Luke!');
+            this.showDismissibleAlert = true;
         }
     }
 
