@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import TestPictureInput from "./components/PictureInput.vue";
-import { Component, Vue } from "vue-property-decorator";
+import TestPictureInput from './components/PictureInput.vue';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
     components: {
