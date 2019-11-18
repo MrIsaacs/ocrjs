@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import App from './App.vue';
+import OCRjs from './OCRjs';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import BootstrapVue from 'bootstrap-vue';
@@ -19,5 +19,5 @@ Vue.component('v-icon', FontAwesomeIcon);
 Vue.config.productionTip = false;
 
 new Vue({
-    render: h => h(App)
-}).$mount('#vue-app');
+    render: h => h(OCRjs)
+}).$mount('#ocrjs');

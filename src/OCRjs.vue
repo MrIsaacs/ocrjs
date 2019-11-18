@@ -1,16 +1,16 @@
 <template>
-  <div id="vue-app">
-    <TestPictureInput />
+  <div id="ocrjs">
+    <PictureHandler />
   </div>
 </template>
 
 <script>
-import TestPictureInput from './components/PictureInput.vue';
+import PictureHandler from './components/PictureHandler';
 
 export default {
-    name: 'VueApp',
+    name: 'OCRjs',
     components: {
-        TestPictureInput
+        PictureHandler,
     }
 };
 </script>

@@ -80,7 +80,7 @@ import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 
 export default {
-    name: 'TestPictureInput',
+    name: 'PictureHandler',
     components: {
         VueCropper
     },
