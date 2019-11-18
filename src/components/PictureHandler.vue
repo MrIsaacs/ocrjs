@@ -77,31 +77,14 @@ export default {
     components: {
         VueCropper
     },
-    props: {
-        text: {
-            type: String,
-            default: ''
-        },
-        doc: {
-            type: Array,
-            default: function() {
-                return [];
-            }
-        },
-        progress: {
-            type: Number,
-            default: 0
-        },
-        imageSrc: {
-            type: String,
-            default: null
-        },
-        croppedImage: {
-            type: String,
-            default: null
-        },
-        showDismissibleAlert: {
-            type: Boolean
+    data: function() {
+        return {
+            text: '',
+            doc: [],
+            progress: 0,
+            imageSrc: null,
+            croppedImage: null,
+            showDismissibleAlert: false
         }
     },
     methods: {
