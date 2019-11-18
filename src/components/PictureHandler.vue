@@ -18,6 +18,23 @@
     </b-progress>
     <div class="col-lg-12">
       <div class="content">
+        <div class="upload-btn-wrapper">
+          <a
+            href="#"
+            title="Upload an Image"
+            class="btn"
+            @click="chooseImage">
+            <v-icon
+              icon="image" />
+            Upload File
+            <input
+              ref="input"
+              type="file"
+              name="image"
+              accept="image/*"
+              @change="setImage" />
+          </a>
+        </div>
         <section
           v-if="imageSrc"
           class="cropper-area">
