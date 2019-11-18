@@ -3,9 +3,9 @@ import App from './App.vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import BootstrapVue from 'bootstrap-vue';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlus, faImage, faFileInvoice } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {library} from '@fortawesome/fontawesome-svg-core';
+import {faPlus, faImage, faFileInvoice} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 library.add(
     faPlus,

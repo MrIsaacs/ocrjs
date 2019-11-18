@@ -6,16 +6,13 @@
 
 <script>
 import TestPictureInput from './components/PictureInput.vue';
-import { Component, Vue } from 'vue-property-decorator';
 
-@Component({
+export default {
+    name: 'VueApp',
     components: {
         TestPictureInput
     }
-})
-class VueApp extends Vue {};
-
-export default VueApp;
+};
 </script>
 
 <style>
