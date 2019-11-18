@@ -36,11 +36,10 @@ export default {
         Modal
         // ScanAdd
     },
-    props: {
-        heading: {
-            type: String,
-            default: 'OCRjs'
-        }
+    data: function() {
+        return {
+            heading: 'OCRjs'
+        };
     },
     methods: {
         openModal() {
@@ -51,10 +50,6 @@ export default {
 </script>
 
 <style>
-a:hover {
-  color: #FFF !important;
-}
-
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -81,6 +76,10 @@ a:hover {
 .my-float {
   font-size: 24px;
   margin-top: 18px;
+}
+
+a#item-add:hover {
+    color: #FFF;
 }
 
 a#item-add + ul {
