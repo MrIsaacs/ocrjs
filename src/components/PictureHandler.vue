@@ -1,73 +1,66 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <b-alert
-        v-model="showDismissibleAlert"
-        variant="warning"
-        dismissible>
-        First choose an image and then select the area which will be scanned!
-      </b-alert>
-      <b-progress
-        v-if="imageSrc"
-        class="rounded-0"
-        :max="100">
-        <b-progress-bar
-          :value="progress"
-          :label="`${progress.toFixed(0)}%`"
-          :max="100"
-          show-progress />
-      </b-progress>
-      <div class="col-lg-12">
-        <h1 class="h2 text-center">
-          {{heading}}
-        </h1>
+  <div class="row">
+    <b-alert
+      v-model="showDismissibleAlert"
+      variant="warning"
+      dismissible>
+      First choose an image and then select the area which will be scanned!
+    </b-alert>
+    <b-progress
+      v-if="imageSrc"
+      class="rounded-0"
+      :max="100">
+      <b-progress-bar
+        :value="progress"
+        :label="`${progress.toFixed(0)}%`"
+        :max="100"
+        show-progress />
+    </b-progress>
+    <div class="col-lg-12">
+      <div class="content">
+        <section
+          v-if="imageSrc"
+          class="cropper-area">
+          <VueCropper
+            ref="cropper"
+            :src="imageSrc"
+            alt="Source Image"
+            :cropend="cropImage" />
+        </section>
+        <section class="preview-area">
+          <p>
+            Preview
+          </p>
+          <div class="cropped-image">
+            <img
+              v-if="croppedImage"
+              :src="croppedImage"
+              alt="Cropped Image">
+            <div
+              v-else
+              class="crop-placeholder" />
+          </div>
+        </section>
       </div>
-      <div class="col-lg-12">
-        <div class="content">
-          <section
-            v-if="imageSrc"
-            class="cropper-area">
-            <VueCropper
-              ref="cropper"
-              :src="imageSrc"
-              alt="Source Image"
-              :cropend="cropImage" />
-          </section>
-          <section class="preview-area">
-            <p>
-              Preview
-            </p>
-            <div class="cropped-image">
-              <img
-                v-if="croppedImage"
-                :src="croppedImage"
-                alt="Cropped Image">
-              <div
-                v-else
-                class="crop-placeholder" />
-            </div>
-          </section>
-        </div>
-        <!-- ImageCropper / -->
-      </div>
-      <div
-        v-if="progress === 100"
-        class="col-lg-12">
-        <h3 class="text-center">
-          Output goes here:
-        </h3>
-        <div>
-          <b-card
-            :img-src="imageSrc"
-            img-alt="Card image"
-            img-left
-            class="mb-3">
-            <b-card-text>
-              <!-- eslint-disable-next-line -->
+      <!-- ImageCropper / -->
+    </div>
+    <div
+      v-if="progress === 100"
+      class="col-lg-12">
+      <h3 class="text-center">
+        Output goes here:
+      </h3>
+      <div>
+        <b-card
+          :img-src="imageSrc"
+          img-alt="Card image"
+          img-left
+          class="mb-3">
+          <b-card-text>
+            <!-- eslint-disable-next-line -->
               <p v-for="paragraph in doc" v-html="paragraph" />
-            </b-card-text>
-          </b-card>
-        </div>
+          </b-card-text>
+        </b-card>
       </div>
     </div>
   </div>
@@ -85,10 +78,6 @@ export default {
         VueCropper
     },
     props: {
-        heading: {
-            type: String,
-            default: 'OCRjs'
-        },
         text: {
             type: String,
             default: ''
