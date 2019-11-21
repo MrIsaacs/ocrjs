@@ -6,14 +6,16 @@
           <h1 class="h2 text-center">
             {{heading}}
           </h1>
+          <List :items="scans" />
         </div>
-        <Modal>
-          <PictureHandler />
+        <Modal @save="onSave">
+          <PictureHandler v-if="add" />
+          <ScanView :content="getItem" v-else />
         </Modal>
         <a
           id="item-add"
           href="#"
-          title="Scan the area"
+          title="Add scanned text"
           class="float"
           @click="openModal">
           <v-icon
@@ -28,22 +30,47 @@
 <script>
 import PictureHandler from './components/PictureHandler';
 import Modal from './components/Modal';
+import ScanView from './components/Scans/ScanView';
+import List from './components/List';
 
 export default {
     name: 'OCRjs',
     components: {
         PictureHandler,
-        Modal
-        // ScanAdd
+        Modal,
+        ScanView,
+        List
     },
     data: function() {
         return {
-            heading: 'OCRjs'
+            heading: 'OCRjs',
+            modalObj: null,
+            add: false,
+            tour: true,
+            scans: []
         };
     },
+    mounted: function () {
+        this.$root.$on('openEditModal', (record, index) => {
+            this.add = false;
+            this.modalObj = record;
+            this.$bvModal.show('modal');
+        });
+        this.$root.$on('openAddModal', (record, index) => {
+            this.add = true;
+            this.$bvModal.show('modal');
+        });
+    },
     methods: {
-        openModal() {
-            this.$bvModal.show('modal-add');
+        openModal(record, index) {
+            this.$root.$emit('openAddModal', record, index);
+        },
+        getItem() {
+            // item is set by eventHandler
+            return this.modalObj;
+        },
+        onSave(item) {
+            this.scans.push(item);
         }
     }
 };

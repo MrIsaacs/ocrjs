@@ -1,85 +1,78 @@
 <template>
-  <div class="row">
-    <b-alert
-      v-model="showDismissibleAlert"
-      variant="warning"
-      dismissible>
-      First choose an image and then select the area which will be scanned!
-    </b-alert>
-    <b-progress
-      v-if="imageSrc"
-      class="rounded-0"
-      :max="100">
-      <b-progress-bar
-        :value="progress"
-        :label="`${progress.toFixed(0)}%`"
-        :max="100"
-        show-progress />
-    </b-progress>
-    <div class="col-lg-12">
-      <div class="content">
-        <div class="upload-btn-wrapper">
-          <a
-            href="#"
-            title="Upload an Image"
-            class="btn"
-            @click="chooseImage">
-            <v-icon
-              icon="image" />
-            Upload File
-            <input
-              ref="input"
-              type="file"
-              name="image"
-              accept="image/*"
-              @change="setImage" />
-          </a>
+  <div class="container">
+    <b-row class="text-center">
+      <b-col>
+        <b-alert
+          v-model="showDismissibleAlert"
+          variant="warning"
+          dismissible>
+          First choose an image and then select the area which will be scanned!
+        </b-alert>
+      </b-col>
+      <div class="w-100" />
+      <b-col v-if="!imageSrc">
+        <v-icon
+          style="font-size: 56px;"
+          icon="image" />
+        <br>
+        No image here<br>
+
+        <b-button
+          id="upld-wrpr"
+          class="upload-wrapper"
+          size="md"
+          variant="outline-dark"
+          @click="uploadImage">
+          <v-icon icon="image" />
+          Upload
+        </b-button>
+        <input
+          ref="input"
+          type="file"
+          name="image"
+          accept="image/*"
+          @change="setImage">
+      </b-col>
+      <div
+        v-if="imageSrc"
+        id="preview-overlay">
+        <b-img
+          :src="croppedImage"
+          fluid />
+      </div>
+      <section
+        v-if="imageSrc"
+        class="cropper-area">
+        <VueCropper
+          ref="cropper"
+          :src="imageSrc"
+          alt="Source Image"
+          :ready="cropImage"
+          :cropend="cropImage" />
+      </section>
+      <b-progress
+        v-if="imageSrc"
+        class="rounded-0"
+        :max="100">
+        <b-progress-bar
+          :value="progress"
+          :label="`${progress.toFixed(0)}%`"
+          :max="100"
+          show-progress />
+      </b-progress>
+      <div
+        v-if="progress === 100"
+        class="col-lg-12">
+        <h3 class="text-center">
+          Output goes here:
+        </h3>
+        <div>
+          <p
+            v-for="paragraph in doc"
+            v-html="paragraph" />
         </div>
-        <section
-          v-if="imageSrc"
-          class="cropper-area">
-          <VueCropper
-            ref="cropper"
-            :src="imageSrc"
-            alt="Source Image"
-            :cropend="cropImage" />
-        </section>
-        <section class="preview-area">
-          <p>
-            Preview
-          </p>
-          <div class="cropped-image">
-            <img
-              v-if="croppedImage"
-              :src="croppedImage"
-              alt="Cropped Image">
-            <div
-              v-else
-              class="crop-placeholder" />
-          </div>
-        </section>
       </div>
-      <!-- ImageCropper / -->
-    </div>
-    <div
-      v-if="progress === 100"
-      class="col-lg-12">
-      <h3 class="text-center">
-        Output goes here:
-      </h3>
-      <div>
-        <b-card
-          :img-src="imageSrc"
-          img-alt="Card image"
-          img-left
-          class="mb-3">
-          <b-card-text>
-            <!-- eslint-disable-next-line -->
-              <p v-for="paragraph in doc" v-html="paragraph" />
-          </b-card-text>
-        </b-card>
-      </div>
-    </div>
+    </b-row>
   </div>
 </template>
 
@@ -98,11 +91,29 @@ export default {
         return {
             text: '',
             doc: [],
+            cropperReady: false,
             progress: 0,
             imageSrc: null,
             croppedImage: null,
             showDismissibleAlert: false
+        };
+    },
+    computed: {
+        getCroppedImage() {
+            return this.croppedImage;
         }
+    },
+    mounted: function() {
+        this.$root.$on('scanCrop', () => {
+            this.scanCroppedImage();
+        });
+        this.$root.$on('saveRequest', () => {
+            this.$root.$emit('saveResponse', {
+                croppedImage: this.croppedImage,
+                reference: this.imageSrc,
+                scannedText: this.doc[this.doc.length-1]
+            });
+        });
     },
     methods: {
         cropImage() {
@@ -110,14 +121,16 @@ export default {
                 this.croppedImage = this.$refs.cropper.getCroppedCanvas().toDataURL();
             }
         },
-        createImage() {
-            console.log('Croppen wurde beendet.');
-        },
-        chooseImage() {
+        uploadImage(event) {
+            event.preventDefault();
             this.$refs.input.click();
         },
         appendText() {
             this.doc.push(this.text);
+        },
+        cropperIsReady() {
+            this.cropperReady = true;
+            this.cropImage();
         },
         async scanCroppedImage() {
             if(this.$refs.cropper) {
@@ -129,7 +142,6 @@ export default {
                                 0 :
                                 m.progress * 100;
                         }
-                        console.log(m);
                     }
                 });
 
@@ -139,7 +151,7 @@ export default {
                 const {
                     data: {text}
                 } = await worker.recognize(this.croppedImage);
-                this.doc.push(text.replace(/\n/g, '<br />'));
+                this.doc.push(text/*.replace(/\n/g, '<br />')*/);
                 await worker.terminate();
             } else {
                 this.showDismissibleAlert = true;
@@ -154,9 +166,7 @@ export default {
             if (typeof FileReader === 'function') {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    console.log(event.target.result);
                     this.imageSrc = event.target.result;
-                    this.croppedImage = this.cropImage();
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -183,8 +193,38 @@ li {
   margin: 0 10px;
 }
 
-img {
-  max-width: 25rem;
+a#menu-share i {
+  animation: rotate-in 0.2s;
+}
+
+a#menu-share:hover i {
+  animation: rotate-out 0.2s;
+}
+
+#preview-overlay {
+  position: fixed;
+  top: 91px;
+  right: 0;
+  min-width: 150px;
+  max-width: 250px;
+  height: 30%;
+  max-height: 354px;
+  overflow-y: hidden;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAIAAAAC64paAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACmSURBVDhP7ZJLFsIgDEXlsyb2P2fAhoB4NbGnWqhHHDjxDlqS9BGah8s5X0aISO89peScs9QOSuS9RUv8xR/ynRg/h1h9gpo/FXMNQggWPEPJtiDQ1ZHWWilFL5OlHqDyYNEINOiPSjIcitLKwO5nF7Z4I9a2PF/Q6g99tvcSZ2L+jcHoWoe0oSWPjTPQ4KWO5zalHbVW3DrrjJ7v8FO7bZCPMYrIFb6yvwfm5nBeAAAAAElFTkSuQmCC');
+  -webkit-box-shadow: -15px 15px 50px -5px rgba(0,0,0,0.6);
+  -moz-box-shadow: -15px 15px 50px -5px rgba(0,0,0,0.6);
+  box-shadow: -15px 15px 50px -5px rgba(0,0,0,0.6);
+  z-index: 1;
+}
+
+#preview-overlay > .preview {
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   padding: 5px;
+   background-color: #FFF;
+   border-top: 1px solid #000;
+   border-right: 1px solid #000;
 }
 
 .progress {
@@ -198,21 +238,33 @@ img {
   background-color: #42b983;
 }
 
+input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  font-size: 50px;
+}
+
+.upload-wrapper {
+  position: relative;
+  float: left;
+  overflow: hidden;
+}
+
 .upload-btn-wrapper {
   position: relative;
   overflow: hidden;
   display: inline-block;
-  cursor: pointer !important;
 }
 
 .btn {
-  border: 2px solid gray;
   color: gray;
   background-color: white;
   padding: 8px 20px;
   border-radius: 8px;
-  font-size: 20px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .upload-btn-wrapper input[type=file] {
@@ -262,63 +314,9 @@ img {
   animation: bot-to-top 2s ease-out;
 }
 
-.float-2nd {
-  right: 120px;
-}
-
-.float-3nd {
-  right: 200px;
-}
-
-ul{
-  position: fixed;
-  right: 40px;
-  padding-bottom: 20px;
-  bottom: 80px;
-  z-index: 100;
-}
-
-ul li {
-  list-style: none;
-  margin-bottom: 10px;
-}
-
-ul li a {
-  background-color: #0C9;
-  color: #FFF;
-  border-radius: 50px;
-  text-align: center;
-  box-shadow: 2px 2px 3px #999;
-  width: 60px;
-  height: 60px;
-  display: block;
-}
-
-ul:hover {
-    visibility: visible!important;
-    opacity: 1!important;
-}
-
 .my-float {
   font-size: 24px;
   margin-top: 18px;
-}
-
-a#menu-share + ul {
-  visibility: hidden;
-}
-
-a#menu-share:hover + ul {
-  visibility: visible;
-  animation: scale-in 0.2s;
-}
-
-a#menu-share i {
-  animation: rotate-in 0.2s;
-}
-
-a#menu-share:hover i {
-  animation: rotate-out 0.2s;
 }
 
 @keyframes bot-to-top {
