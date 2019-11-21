@@ -2,7 +2,7 @@
   "name": "OCRjs",
   "description": "Online JavaScript Image2Text converter",
   "homepage": "http://mrisaacs.org/ocrjs/dist",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Ivan Ilic",
     "email": "me@mrisaacs.org",
@@ -19,7 +19,8 @@
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build --modern",
     "postbuild": "rimraf dist/**/*.map",
-    "lint": "eslint --ext .js,.vue src"
+    "lint": "eslint --ext .js,.vue src",
+    "lint-autofix": "eslint --ext .js,.vue src --fix"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
