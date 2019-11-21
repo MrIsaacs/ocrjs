@@ -135,7 +135,6 @@ export default {
         async scanCroppedImage() {
             if(this.$refs.cropper) {
                 const worker = createWorker({
-                    langPath: '../lang-data',
                     logger: m => {
                         if (m.jobId) {
                             this.progress = m.progress == 0 ?
