@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import BootstrapVue from 'bootstrap-vue';
 import {library} from '@fortawesome/fontawesome-svg-core';
-import {faCropAlt, faFileInvoice, faImage, faSave, faPlus} from '@fortawesome/free-solid-svg-icons';
+import {faCropAlt, faFileInvoice, faImage, faSave, faPlus, faRunning} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 library.add(
@@ -12,7 +12,8 @@ library.add(
     faFileInvoice,
     faImage,
     faSave,
-    faPlus
+    faPlus,
+    faRunning
 );
 
 Vue.use(BootstrapVue);

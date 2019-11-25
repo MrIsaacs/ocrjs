@@ -3,26 +3,31 @@
     id="modal"
     title="Add your Image here"
     size="xl"
-    scrollable
-    @cancel="scanCroppedArea"
-    @ok="saveItem">
+    scrollable>
     <slot />
-    <template v-slot:modal-footer="{cancel, ok}">
+    <template v-slot:modal-footer>
       <b-button
         id="scan-area"
-        size="md"
+        size="lg"
         variant="outline-dark"
-        @click="cancel">
+        @click="scanCroppedArea">
         <v-icon icon="crop-alt" />
         Scan
       </b-button>
       <b-button
         id="save-item"
-        size="md"
+        size="lg"
         variant="outline-dark"
-        @click="ok">
+        @click="saveItem">
         <v-icon icon="save" />
-        Save/Exit
+        Save
+      </b-button>
+      <b-button
+        size="lg"
+        variant="outline-dark"
+        @click="exit">
+        <v-icon icon="running" />
+        Exit
       </b-button>
     </template>
   </b-modal>
@@ -51,13 +56,14 @@ export default {
         });
     },
     methods: {
-        saveItem(event) {
-            event.preventDefault();
-            this.$root.$emit('saveRequest');
+        exit() {
+            this.$bvModal.hide('modal');
         },
-        scanCroppedArea(event) {
-            event.preventDefault();
+        scanCroppedArea() {
             this.$root.$emit('scanCrop');
+        },
+        saveItem() {
+            this.$root.$emit('saveRequest');
         }
     }
 };

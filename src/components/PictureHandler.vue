@@ -16,11 +16,10 @@
           icon="image" />
         <br>
         No image here<br>
-
+        <br>
         <b-button
           id="upld-wrpr"
-          class="upload-wrapper"
-          size="md"
+          size="lg"
           variant="outline-dark"
           @click="uploadImage">
           <v-icon icon="image" />
@@ -238,39 +237,6 @@ a#menu-share:hover i {
 }
 
 input[type="file"] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: none;
-  font-size: 50px;
-}
-
-.upload-wrapper {
-  position: relative;
-  float: left;
-  overflow: hidden;
-}
-
-.upload-btn-wrapper {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}
-
-.btn {
-  color: gray;
-  background-color: white;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.upload-btn-wrapper input[type=file] {
-  font-size: 50px;
-  position: absolute;
-  left: 0;
-  top: 0;
   display: none;
 }
 

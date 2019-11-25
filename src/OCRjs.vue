@@ -1,13 +1,14 @@
 <template>
   <div id="ocrjs">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
-          <h1 class="h2 text-center">
+    <b-container fluid>
+      <b-row class="text-center">
+        <b-col>
+          <h1>
             {{heading}}
           </h1>
+          <hr>
           <List :items="scans" />
-        </div>
+        </b-col>
         <Modal @save="onSave">
           <PictureHandler v-if="add" />
           <ScanView :content="getItem" v-else />
@@ -22,8 +23,8 @@
             class="my-float"
             icon="plus" />
         </a>
-      </div>
-    </div>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -77,12 +78,9 @@ export default {
 </script>
 
 <style>
-#app {
+#ocrjs {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  margin-top: 60px;
+  margin-top: 15px;
 }
 
 .float {

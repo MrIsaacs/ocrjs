@@ -1,5 +1,5 @@
 <template>
-  <div class="List">
+  <b-col class="List">
     <div v-if="scanData.length > 0">
       <b-table
         striped
@@ -28,11 +28,12 @@
     </div>
     <div v-else>
       <v-icon
-        class="my-float"
-        icon="image" />
-      Empty list...
+        style="font-size: 56px; margin: 15px 0;"
+        icon="file-invoice" />
+      <br>
+      Empty Scanlist
     </div>
-  </div>
+  </b-col>
 </template>
 
 <script>
