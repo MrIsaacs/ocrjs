@@ -46,7 +46,7 @@
           ref="cropper"
           :src="imageSrc"
           alt="Source Image"
-          :ready="cropImage"
+          :ready="cropperIsReady"
           :cropend="cropImage" />
       </section>
       <b-progress
@@ -107,11 +107,15 @@ export default {
             this.scanCroppedImage();
         });
         this.$root.$on('saveRequest', () => {
-            this.$root.$emit('saveResponse', {
-                croppedImage: this.croppedImage,
-                reference: this.imageSrc,
-                scannedText: this.doc[this.doc.length-1]
-            });
+            if(this.doc.length) {
+                this.$root.$emit('saveResponse', {
+                    croppedImage: this.croppedImage,
+                    reference: this.imageSrc,
+                    scannedText: this.doc[this.doc.length-1]
+                });
+            } else {
+                this.showDismissibleAlert = true;
+            }
         });
     },
     methods: {
