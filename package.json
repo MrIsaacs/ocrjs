@@ -3,6 +3,10 @@
   "description": "Online JavaScript Image2Text converter",
   "homepage": "http://mrisaacs.org/ocrjs/dist",
   "version": "0.3.0",
+  "repsitory": {
+    "type": "git",
+    "url": "git+https://github.com/MrIsaacs/ocrjs.git"
+  },
   "author": {
     "name": "Ivan Ilic",
     "email": "me@mrisaacs.org",
