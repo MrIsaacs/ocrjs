@@ -1,0 +1,18 @@
+// have to add the woff files manually to the project css folder
+@import "./cutsom/_variables.scss";
+@import "bootstrap-icons/font/bootstrap-icons";
+
+#color-settings {
+  > a,
+  > ul > li > a {
+    cursor: pointer !important;
+  }
+}
+
+#upld-wrpr[class*="btn-outline-"] {
+  background-color: rgb(from var(--bs-btn-hover-bg) r g b / 0.3);
+  border-color: rgb(from var(--bs-btn-border-color) r g b / 0.25);
+  &:hover {
+    background-color: rgb(from var(--bs-btn-hover-bg) r g b / 0.5);
+  }
+}
