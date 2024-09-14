@@ -1,5 +1,40 @@
 # Changelog
 
+## v1.0.0
+
+### ⚠️ Breaking Changes
+
+This upgrade introduces breaking changes due to framework and API updates to leverage the latest Nuxt3 features. The project structure now includes `layouts`, `pages`, and `public` directories specific to Nuxt3. SCSS and usebootstrap support has been integrated for enhanced styling capabilities, and Pinia is now used for more efficient state management. The `dist` folder has been removed as its generation will be managed by the CI/CD pipeline.
+
+Additionally, TypeScript support has been introduced with updated configuration to improve development and type safety.
+
+### 🚀 Enhancements
+
+- **nuxt:** Migrate project to Nuxt3 framework ([2d2633e](https://github.com/MrIsaacs/ocrjs/commit/2d2633e))
+- **nuxt:** Add `layouts`, `pages` and `public` directories ([0364fa4](https://github.com/MrIsaacs/ocrjs/commit/0364fa4))
+- **scss:** Integrate SCSS into project ([246afda](https://github.com/MrIsaacs/ocrjs/commit/246afda))
+- **store:** Add Pinia for state management ([743be8d](https://github.com/MrIsaacs/ocrjs/commit/743be8d))
+- **frontend:** Add usebootstrap for template development ([0ceddcd](https://github.com/MrIsaacs/ocrjs/commit/0ceddcd))
+
+### 💅 Refactors
+
+- Remove and reorganize files and folders ([a48fe8c](https://github.com/MrIsaacs/ocrjs/commit/a48fe8c))
+
+### 📖 Documentation
+
+- Introduce changelogs to enhance project documentation
+
+### 🏡 Chore
+
+- Update base URL configuration ([ed18976](https://github.com/MrIsaacs/ocrjs/commit/ed18976))
+- **build:** Remove `dist` folder for CI deployment ([9b1cf18](https://github.com/MrIsaacs/ocrjs/commit/9b1cf18))
+- **deps:** Update dependecies for Nuxt3 changes ([0ceddcd](https://github.com/MrIsaacs/ocrjs/commit/0ceddcd))
+
+
+### ❤️ Contributors
+
+- Ivan Ilic ([@MrIsaacs](http://github.com/MrIsaacs))
+
 ## v0.3.1
 
 ### 🚀 Enhancements
