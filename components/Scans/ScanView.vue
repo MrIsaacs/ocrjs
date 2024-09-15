@@ -1,44 +1,32 @@
+<script setup>
+const props = defineProps({
+  doc: {
+    type: Object,
+    requiered: false
+  }
+})
+</script>
+
 <template>
   <div class="container">
     <div class="row">
       <div id="preview-overlay">
         <b-img
-          :src="croppedImage"
+          :src="doc.image"
           fluid />
       </div>
       <div class="content">
         <b-img
-          :src="reference"
+          :src="doc.reference"
           fluid-grow />
         <div>
           <h4><u>Scanned Text:</u></h4>
-          <p>{{scannedText}}</p>
+          <p>{{doc.text}}</p>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-export default {
-    name: 'ScanView',
-    props: {
-        content: {
-            type: Function,
-            default: function() {
-                return 'SchuHschuH';
-            }
-        }
-    },
-    data: function() {
-        return {
-            reference: this.content().reference,
-            croppedImage: this.content().croppedImage,
-            scannedText: this.content().scannedText
-        };
-    }
-};
-</script>
 
 <style scoped>
 #preview-overlay {

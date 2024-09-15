@@ -1,64 +1,201 @@
+<script setup>
+import VueCropper from 'vue-cropperjs'
+import 'cropperjs/dist/cropper.css'
+import { createWorker } from 'tesseract.js'
+
+const documentStore = useScanDocumentStore()
+
+const text = ref('')
+const inputImage = ref()
+const progress = ref(0)
+
+const imageReference = ref()
+const imageCropped = ref('')
+
+const cropper = ref()
+const cropperReady = ref(false)
+const cropperSetupIsFinished = ref(false)
+
+
+async function cropImage() {
+  if (cropperSetupIsFinished.value) {
+    imageCropped.value = cropper.value.getCroppedCanvas().toDataURL()
+  }
+}
+
+function cropperIsReady() {
+  if (!cropperReady.value) {
+    cropperReady.value = true
+  }
+}
+
+function cropperSetup() {
+  if(cropperReady.value && !cropperSetupIsFinished.value) {
+    imageCropped.value = cropper.value.getCroppedCanvas().toDataURL()
+    cropperSetupIsFinished.value = true
+  }
+}
+
+function loadImage(event) {
+  event.preventDefault();
+  inputImage.value.click()
+}
+
+function setImage(e) {
+  const file = e.target.files[0];
+  if (file.type.indexOf('image/') === -1) {
+    alert('Please select an image file');
+    return;
+  }
+  if (typeof FileReader === 'function') {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      imageReference.value = event.target.result
+      return
+      // add image later into document store,
+      // because it must be handled before modal is closed,
+      // otherwise current opend image will be lost.
+      // documentStore.addItem({
+      //   reference: event.target.result
+      // })
+    };
+    reader.readAsDataURL(file);
+  } else {
+    alert('Sorry, FileReader API not supported');
+  }
+}
+
+function scanCroppedImage() {
+
+
+}
+
+defineExpose({
+  cropper,
+  cropperReady,
+  cropperSetupIsFinished,
+  imageReference,
+  imageCropped,
+  inputImage,
+  progress,
+  text,
+  scanImage: async function() {
+    if(cropper.value) {
+      const worker = await createWorker('eng', 1, {
+        logger: m => {
+          if (m.jobId) {
+            progress.value = m.progress == 0 ?
+              0 :
+              m.progress * 100;
+          }
+        }
+      });
+
+      const { data } = await worker.recognize(imageCropped.value)
+      text.value = data.text
+
+      // this.doc.push(text/*.replace(/\n/g, '<br />')*/);
+      await worker.terminate();
+    } else {
+      console.log('show DismissibleAlert')
+      
+      // this.showDismissibleAlert = true;
+    }
+  },
+  save: function() {
+    documentStore.addItem({
+      image: imageCropped.value,
+      reference: imageReference.value,
+      text: text.value
+    })
+  }
+})
+
+// mounted: function() {
+//   this.$root.$on('saveRequest', () => {
+//     if(this.doc.length) {
+//       this.$root.$emit('saveResponse', {
+//         croppedImage: this.croppedImage,
+//         reference: this.imageSrc,
+//         scannedText: this.doc[this.doc.length-1]
+//       });
+//     } else {
+//       this.showDismissibleAlert = true;
+//     }
+//   });
+// }
+</script>
+
 <template>
-  <div class="container">
-    <b-row class="text-center">
-      <b-col>
-        <b-alert
-          v-model="showDismissibleAlert"
-          variant="warning"
-          dismissible>
-          First choose an image and then select the area which will be scanned!
-        </b-alert>
-      </b-col>
+  <Container>
+    <Row text-alignment="center">
+      <Col>
+        <slot name="alert" />
+      </Col>
       <div class="w-100" />
-      <b-col v-if="!imageSrc">
-        <v-icon
-          style="font-size: 56px;"
-          icon="image" />
+      <Col v-if="!imageReference">
+        <BIcon
+          icon="fa-solid:image"
+          style="font-size: 3.5rem;"
+        />
         <br>
         No image here<br>
         <br>
-        <b-button
+        <b-a
           id="upld-wrpr"
+          class="link-opacity-75 link-opacity-100-hover"
           size="lg"
-          variant="outline-dark"
-          @click="uploadImage">
-          <v-icon icon="image" />
-          Upload
-        </b-button>
+          font-size="4"
+          button="outline-success"
+          link="dark"
+          @click="loadImage"
+        >
+          <BIcon icon="line-md:uploading-loop" /> Open Image
+        </b-a>
         <input
-          ref="input"
+          ref="inputImage"
           type="file"
           name="image"
           accept="image/*"
-          @change="setImage">
-      </b-col>
+          @change="setImage"
+        >
+      </Col>
       <div
-        v-if="imageSrc"
+        v-if="imageReference"
         id="preview-overlay">
         <b-img
-          :src="croppedImage"
+          :src="imageCropped"
           fluid />
       </div>
+      <!-- <slot name="cropper" /> -->
+       
       <section
-        v-if="imageSrc"
         class="cropper-area">
         <VueCropper
+          v-if="imageReference"
           ref="cropper"
-          :src="imageSrc"
+          :src="imageReference"
           alt="Source Image"
-          :ready="cropperIsReady"
-          :cropend="cropImage" />
+          :crop="cropperSetup"
+          :cropend="cropImage"
+          :ready="cropperIsReady()"
+        />
       </section>
-      <b-progress
-        v-if="imageSrc"
+      <!-- <button @click="scanCroppedImage">Scan Text</button> -->
+      <Progress
+        v-if="imageReference"
+        style="height: 20px"
         class="rounded-0"
-        :max="100">
-        <b-progress-bar
+      >
+        <ProgressBar 
+          :background-color="progress!=100? 'info':'success'"
+          :striped="progress!=100"
+          :animated="progress!=100"
           :value="progress"
-          :label="`${progress.toFixed(0)}%`"
-          :max="100"
-          show-progress />
-      </b-progress>
+        >
+          {{ progress.toFixed(0) }}%
+        </ProgressBar>
+      </Progress>
       <div
         v-if="progress === 100"
         class="col-lg-12">
@@ -66,118 +203,12 @@
           Output goes here:
         </h3>
         <div>
-          <p
-            v-for="paragraph in doc"
-            v-html="paragraph" />
+          <p>{{ text }}</p>
         </div>
       </div>
-    </b-row>
-  </div>
+    </Row>
+  </Container>
 </template>
-
-<script>
-import {createWorker} from 'tesseract.js';
-// import ImageCropper from '@/components/ImageCropper.vue';
-import VueCropper from 'vue-cropperjs';
-import 'cropperjs/dist/cropper.css';
-
-export default {
-    name: 'PictureHandler',
-    components: {
-        VueCropper
-    },
-    data: function() {
-        return {
-            text: '',
-            doc: [],
-            cropperReady: false,
-            progress: 0,
-            imageSrc: null,
-            croppedImage: null,
-            showDismissibleAlert: false
-        };
-    },
-    computed: {
-        getCroppedImage() {
-            return this.croppedImage;
-        }
-    },
-    mounted: function() {
-        this.$root.$on('scanCrop', () => {
-            this.scanCroppedImage();
-        });
-        this.$root.$on('saveRequest', () => {
-            if(this.doc.length) {
-                this.$root.$emit('saveResponse', {
-                    croppedImage: this.croppedImage,
-                    reference: this.imageSrc,
-                    scannedText: this.doc[this.doc.length-1]
-                });
-            } else {
-                this.showDismissibleAlert = true;
-            }
-        });
-    },
-    methods: {
-        cropImage() {
-            if (this.$refs.cropper) {
-                this.croppedImage = this.$refs.cropper.getCroppedCanvas().toDataURL();
-            }
-        },
-        uploadImage(event) {
-            event.preventDefault();
-            this.$refs.input.click();
-        },
-        appendText() {
-            this.doc.push(this.text);
-        },
-        cropperIsReady() {
-            this.cropperReady = true;
-            this.cropImage();
-        },
-        async scanCroppedImage() {
-            if(this.$refs.cropper) {
-                const worker = createWorker({
-                    logger: m => {
-                        if (m.jobId) {
-                            this.progress = m.progress == 0 ?
-                                0 :
-                                m.progress * 100;
-                        }
-                    }
-                });
-
-                await worker.load();
-                await worker.loadLanguage('deu');
-                await worker.initialize('deu');
-                const {
-                    data: {text}
-                } = await worker.recognize(this.croppedImage);
-                this.doc.push(text/*.replace(/\n/g, '<br />')*/);
-                await worker.terminate();
-            } else {
-                this.showDismissibleAlert = true;
-            }
-        },
-        setImage(e) {
-            const file = e.target.files[0];
-            if (file.type.indexOf('image/') === -1) {
-                alert('Please select an image file');
-                return;
-            }
-            if (typeof FileReader === 'function') {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    this.imageSrc = event.target.result;
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert('Sorry, FileReader API not supported');
-            }
-        }
-    }
-};
-</script>
 
 <style scoped>
 h1,
