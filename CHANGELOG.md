@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.0.0
+## v1.0.1
 
 ### ⚠️ Breaking Changes
 
@@ -16,13 +16,18 @@ Additionally, TypeScript support has been introduced with updated configuration 
 - **store:** Add Pinia for state management ([743be8d](https://github.com/MrIsaacs/ocrjs/commit/743be8d))
 - **frontend:** Add usebootstrap for template development ([0ceddcd](https://github.com/MrIsaacs/ocrjs/commit/0ceddcd))
 
+### 🩹 Fixes
+
+- **component:** Rename `PictureHandler` to `ImageHandler` ([ae23d8c](https://github.com/MrIsaacs/ocrjs/commit/ae23d8c))
+- **template:** Adjust components and correct missing parts ([8ea54ce](https://github.com/MrIsaacs/ocrjs/commit/8ea54ce))
+
 ### 💅 Refactors
 
 - Remove and reorganize files and folders ([a48fe8c](https://github.com/MrIsaacs/ocrjs/commit/a48fe8c))
 
 ### 📖 Documentation
 
-- Introduce changelogs to enhance project documentation
+- Introduce changelogs to enhance project documentation ([8a27f03](https://github.com/MrIsaacs/ocrjs/commit/a48fe8c))
 
 ### 🏡 Chore
 
