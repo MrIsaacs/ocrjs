@@ -2,7 +2,7 @@
   "name": "ocrjs",
   "description": "Online JavaScript Image2Text converter",
   "homepage": "http://mrisaacs.org/ocrjs/dist",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MrIsaacs/ocrjs.git",
