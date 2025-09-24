@@ -2,7 +2,7 @@
   "name": "ocrjs",
   "description": "Online JavaScript Image2Text converter",
   "homepage": "http://mrisaacs.org/ocrjs/dist",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MrIsaacs/ocrjs.git",
@@ -19,16 +19,17 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "release": "standard-version"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.11.2",
     "@nuxt/content": "^3.7.1",
     "@nuxt/eslint": "^1.9.0",
     "@nuxt/fonts": "^0.11.4",
     "@nuxt/icon": "^2.0.0",
     "@nuxt/image": "^1.11.0",
     "@nuxt/scripts": "^0.11.13",
+    "@pinia/nuxt": "^0.11.2",
     "@unhead/vue": "^2.0.17",
     "better-sqlite3": "^12.4.1",
     "bootstrap": "^5.3.8",
@@ -44,7 +45,8 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "sass-embedded": "^1.93.2"
+    "sass-embedded": "^1.93.2",
+    "standard-version": "^9.5.0"
   },
   "bugs": {
     "url": "https://github.com/MrIsaacs/ocrjs/issues"

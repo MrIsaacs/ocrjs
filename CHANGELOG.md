@@ -1,5 +1,20 @@
 # Changelog
 
+## [v2.0.0](https://github.com/MrIsaacs/ocrjs/compare/v1.0.1...v2.0.0)
+
+
+### ⚠️ BREAKING CHANGES
+
+In version **2.0**, the project has been upgraded from Nuxt 3 to Nuxt 4, introducing several breaking changes. The directory structure and conventions have been updated, requiring adjustments to component organization and imports.
+
+### 🚀 Enhancements
+
+* **nuxt:** Migrate project to Nuxt v4 ([f985353](https://github.com/MrIsaacs/ocrjs/commit/f9853532566bc4b73ec7d47551fd59d149cb0f5b))
+
+### ❤️ Contributors
+
+- Ivan Ilic ([@MrIsaacs](http://github.com/MrIsaacs))
+
 ## v1.0.1
 
 ### ⚠️ Breaking Changes
@@ -72,4 +87,3 @@ Additionally, TypeScript support has been introduced with updated configuration 
 ### ❤️ Contributors
 
 - Ivan Ilic ([@MrIsaacs](http://github.com/MrIsaacs))
-
