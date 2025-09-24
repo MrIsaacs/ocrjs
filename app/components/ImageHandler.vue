@@ -50,6 +50,8 @@ function setImage(e) {
   if (typeof FileReader === 'function') {
     const reader = new FileReader();
     reader.onload = (event) => {
+      console.log('asds');
+      
       imageReference.value = event.target.result
       return
       // add image later into document store,

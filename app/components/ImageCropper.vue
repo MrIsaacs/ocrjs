@@ -1,5 +1,6 @@
 <template>
   <div>
+    ss
     <VueCropper
       v-if="image"
       ref="cropper"
